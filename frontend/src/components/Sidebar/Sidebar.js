@@ -62,6 +62,16 @@ function Sidebar(props) {
                   <p>Packaging</p>
                 </NavLink>
               </li>
+              <li>
+                <NavLink
+                  to={"/dashboard/Products"}
+                  className="nav-link"
+                  // onClick={null}
+                >
+                  <i className="fa-solid fa-house"></i>
+                  <p>Products</p>
+                </NavLink>
+              </li>
             </Nav>
           </div>
         </div>

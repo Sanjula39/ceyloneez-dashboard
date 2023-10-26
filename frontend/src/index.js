@@ -12,6 +12,7 @@ import Dashboard from "views/Dashboard";
 import NoMatch from "components/NoMatch";
 import Register from "components/Forms/Register";
 import Packaging from "components/Packaging/Packaging";
+import Products from "components/Products/Show";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -35,6 +36,7 @@ root.render(
             <Route path="Footware" element={null} />
             <Route path="Register" element={<Register />} />
             <Route path="Packaging" element={<Packaging />} />
+            <Route path="Products" element={<Products />} />
           </Route>
           <Route path="*" element={<NoMatch />}></Route>
         </Routes>

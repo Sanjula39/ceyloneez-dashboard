@@ -7,6 +7,9 @@ import numpy as np
 from werkzeug.utils import secure_filename
 from signature_extraction import extract_signature
 
+import certificateDetails, scraper
+from googlesearch import search
+
 
 app = Flask(__name__)
 CORS(app)
@@ -54,14 +57,54 @@ def validate_signature():
             return jsonify({'error': 'Error processing the image: ' + str(e)})
 
 
+@app.route('/api/info_handlar', methods=['POST'])
+def info_handlar():
+    try:
+        data = request.get_json()  # Parse JSON data from the request
+        print(data)
+
+        query = data.get('query')  # Get the 'query' parameter from the JSON payload
+        
+        if query:
+            search_results = search_google(query)
+    
+            if not search_results:
+                print("No search results found.")
+                return
+            
+            best_website = search_results[0]
+            major_topic, paragraphs, image_urls = scraper.extract_content(best_website)
+
+            print("\nExtracted Content:")
+            print("Major Topic:", major_topic)
+            print("Paragraph:", paragraphs)
+            print("Image URL:", image_urls)
+
+            page_data = {}
+
+            page_data['major_topic'] = major_topic
+            page_data['paragraphs'] = paragraphs
+            page_data['image_urls'] = image_urls
+
+            return jsonify({"data": page_data}), 200
+        else:
+            return jsonify({"error": "Invalid payload"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
+def search_google(query):
+    search_results = list(search(query, num=5, stop=5, pause=10))
+    return search_results
 
+@app.route('/api/certificate_process', methods=['POST'])
+def rubber_certificate_process():
+    data = request.get_json()  # Parse JSON data from the request
+    print(data)
 
-
-
-
-
+    query = data.get('query')
+    data6 = certificateDetails.scrape_website('https://stepbysteptrade.lk/Procedures?l=en&search=' + query)
+    return jsonify(data6)
 
 
 if __name__ == '__main__':
